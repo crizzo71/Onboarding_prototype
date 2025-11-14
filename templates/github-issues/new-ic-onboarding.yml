@@ -1,0 +1,199 @@
+name: 🚀 New IC Onboarding
+description: Onboarding checklist for new Individual Contributors (Software Engineers, QEs, SREs)
+title: "[ONBOARDING] New IC: [NAME] - Start Date: [DATE]"
+labels: ["onboarding", "individual-contributor"]
+assignees:
+  - # Will be populated by automation with manager
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Welcome to HyperFleet! 🎉
+
+        This issue tracks the onboarding progress for our new team member. Complete all tasks by the specified deadlines to ensure a smooth onboarding experience.
+
+        **New Hire:** [FULL NAME]
+        **Start Date:** [START DATE]
+        **Role:** [SOFTWARE ENGINEER / QE / SRE]
+        **Manager:** [MANAGER NAME]
+        **Onboarding Buddy:** [BUDDY NAME]
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 📅 Pre-Start Date Tasks (Manager)
+        *Complete 5 business days before start date*
+
+  - type: checkboxes
+    id: pre_start_manager
+    attributes:
+      label: Manager Pre-Start Checklist
+      options:
+        - label: "**GitHub Access** - Send organization invite to openshift-hyperfleet"
+        - label: "**Cloud Accounts** - Submit AWS/GCP/Azure access requests"
+        - label: "**VPN Access** - Request VPN credentials if required"
+        - label: "**Hardware** - Confirm laptop/equipment delivery"
+        - label: "**Buddy Assignment** - Assign onboarding buddy from same sub-team"
+        - label: "**Welcome Email** - Send Day 1 agenda and logistics"
+        - label: "**Calendar Setup** - Add to team meetings and ceremonies"
+        - label: "**Slack Channels** - Prepare channel invitation list"
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 🎯 Day 1 Tasks
+        *Complete on first day*
+
+  - type: checkboxes
+    id: day_one_tasks
+    attributes:
+      label: Day 1 Onboarding Tasks
+      options:
+        - label: "**Welcome Meeting** - 1:1 with manager (30 min)"
+        - label: "**Team Introduction** - Meet the team in daily standup"
+        - label: "**Onboarding Buddy** - Schedule regular check-ins"
+        - label: "**Slack Channels** - Join essential channels (#hyperfleet-team, #hyperfleet-dev)"
+        - label: "**Documentation Access** - Bookmark key resources"
+        - label: "**Account Setup** - Complete basic account configurations"
+        - label: "**Read Getting Started** - Review docs/individuals/01-getting-started.md"
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 🛠️ Week 1 Tasks
+        *Complete by end of Week 1*
+
+  - type: checkboxes
+    id: week_one_technical
+    attributes:
+      label: Technical Environment Setup
+      options:
+        - label: "**Local Environment** - Complete development environment setup"
+        - label: "**Environment Validation** - Run validation script successfully"
+        - label: "**Git Configuration** - Set up commit signing and pre-commit hooks"
+        - label: "**Container Registry** - Configure quay.io access"
+        - label: "**IDE Setup** - Install recommended extensions and configurations"
+
+  - type: checkboxes
+    id: week_one_learning
+    attributes:
+      label: Architecture Learning
+      options:
+        - label: "**Architecture Overview** - Read architecture documentation"
+        - label: "**Component Understanding** - Study 2-3 core components in detail"
+        - label: "**CloudEvents Spec** - Review CloudEvents 1.0 specification"
+        - label: "**Kubernetes Operators** - Review operator pattern documentation"
+        - label: "**Architecture Quiz** - Complete self-assessment (80% minimum)"
+
+  - type: checkboxes
+    id: week_one_access
+    attributes:
+      label: Access & Security
+      options:
+        - label: "**Staging Access** - Obtain kubeconfig for staging environment"
+        - label: "**Observability** - Access Grafana dashboards (read-only)"
+        - label: "**CI/CD Pipelines** - Access Prow dashboard and build logs"
+        - label: "**Security Training** - Complete Red Hat security fundamentals"
+        - label: "**MFA Setup** - Configure multi-factor authentication"
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 🚀 Week 2 Tasks
+        *Complete by end of Week 2*
+
+  - type: checkboxes
+    id: week_two_tasks
+    attributes:
+      label: First Contributions
+      options:
+        - label: "**Cloud Account Access** - Development AWS/GCP accounts active"
+        - label: "**First Issue** - Pick up 'good-first-issue' from backlog"
+        - label: "**Code Review** - Participate in at least 2 code reviews"
+        - label: "**Testing** - Write and run tests for your changes"
+        - label: "**Documentation** - Update documentation for your changes"
+        - label: "**First PR Merged** - Successfully merge first contribution"
+
+  - type: checkboxes
+    id: week_two_integration
+    attributes:
+      label: Team Integration
+      options:
+        - label: "**Sprint Participation** - Attend sprint ceremonies"
+        - label: "**Architecture Office Hours** - Attend at least 1 session"
+        - label: "**Team Processes** - Understand release and deployment process"
+        - label: "**Communication Norms** - Comfortable with team communication"
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 📊 30-60-90 Day Milestones
+
+  - type: checkboxes
+    id: milestone_30_days
+    attributes:
+      label: 30 Day Milestone
+      options:
+        - label: "**Independent Work** - Complete features independently"
+        - label: "**Production Access** - Obtain read-only production access"
+        - label: "**Incident Response** - Shadow incident response procedures"
+        - label: "**Feedback Session** - Complete 30-day feedback survey"
+
+  - type: checkboxes
+    id: milestone_60_days
+    attributes:
+      label: 60 Day Milestone
+      options:
+        - label: "**Feature Delivery** - Deliver complete feature end-to-end"
+        - label: "**Architecture Input** - Contribute to architectural discussions"
+        - label: "**Mentoring** - Help with next new hire onboarding"
+        - label: "**Production Contributions** - Make first production deployment"
+
+  - type: checkboxes
+    id: milestone_90_days
+    attributes:
+      label: 90 Day Milestone
+      options:
+        - label: "**Full Team Member** - Function as independent contributor"
+        - label: "**On-Call Ready** - Ready for on-call rotation (if applicable)"
+        - label: "**Technical Leadership** - Lead small technical initiatives"
+        - label: "**Onboarding Feedback** - Provide process improvement feedback"
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes & Blockers
+      description: Track any issues, blockers, or important notes during onboarding
+      placeholder: |
+        - Date: Issue/Note
+        - Date: Blocker resolution
+    validations:
+      required: false
+
+  - type: textarea
+    id: feedback
+    attributes:
+      label: Onboarding Feedback
+      description: What went well? What could be improved?
+      placeholder: |
+        Feedback will be collected at multiple points:
+        - Day 3: Quick pulse check
+        - Day 10: Mid-onboarding survey
+        - Day 30: Comprehensive feedback
+        - Day 90: Retrospective discussion
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ## 📞 Need Help?
+
+        **Daily Questions:** Your onboarding buddy
+        **Administrative Issues:** Your manager
+        **Technical Architecture:** #hyperfleet-dev or Architecture Office Hours
+        **Process Issues:** @onboarding-process-owner
+
+        **Emergency Escalation:** Tag @hyperfleet-managers in this issue

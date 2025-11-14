@@ -1,0 +1,265 @@
+name: 👔 New Manager Onboarding
+description: Onboarding checklist for new Engineering Managers
+title: "[ONBOARDING-MGR] New Manager: [NAME] - Start Date: [DATE]"
+labels: ["onboarding", "manager"]
+assignees:
+  - # Will be populated with senior manager or director
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Welcome to HyperFleet Leadership! 👔
+
+        This issue tracks the onboarding progress for our new engineering manager. Complete all tasks to ensure effective team leadership and process understanding.
+
+        **New Manager:** [FULL NAME]
+        **Start Date:** [START DATE]
+        **Team:** [TEAM/SUB-TEAM NAME]
+        **Reporting Manager:** [SENIOR MANAGER/DIRECTOR]
+        **Mentor Manager:** [PEER MANAGER]
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 📋 Pre-Start Date Tasks (T-10 days)
+        *Complete 10 business days before start date*
+
+  - type: checkboxes
+    id: pre_start_admin
+    attributes:
+      label: Administrative Setup
+      options:
+        - label: "**HR Systems** - Complete new manager paperwork"
+        - label: "**Budget Access** - Request budget and headcount visibility"
+        - label: "**Org Chart** - Update org-as-code repository"
+        - label: "**Management Tools** - Access to performance management systems"
+        - label: "**Calendar Setup** - Add to leadership meetings and ceremonies"
+        - label: "**Manager Slack** - Add to #hyperfleet-managers channel"
+
+  - type: checkboxes
+    id: pre_start_team
+    attributes:
+      label: Team Transition Planning
+      options:
+        - label: "**Team Roster** - Review current team composition and skills"
+        - label: "**Current Projects** - Understand active work and commitments"
+        - label: "**Previous Manager Handoff** - Schedule transition meetings"
+        - label: "**1:1 Schedule** - Plan initial 1:1 schedule with all reports"
+        - label: "**Team Announcement** - Prepare team introduction message"
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 🎯 Week 1 Tasks
+        *Complete during first week*
+
+  - type: checkboxes
+    id: week_one_team_intro
+    attributes:
+      label: Team Introduction & Setup
+      options:
+        - label: "**Team Meeting** - Introduce yourself to the team"
+        - label: "**Individual 1:1s** - Meet with each team member (30 min each)"
+        - label: "**Skip-Level Meetings** - Meet with indirect reports if applicable"
+        - label: "**Team Dynamics** - Understand team culture and working norms"
+        - label: "**Current Challenges** - Identify immediate team challenges"
+        - label: "**Manager README** - Create and share your management style doc"
+
+  - type: checkboxes
+    id: week_one_technical
+    attributes:
+      label: Technical Context
+      options:
+        - label: "**Architecture Overview** - Deep dive into HyperFleet architecture"
+        - label: "**Technical Debt** - Understand current technical debt and trade-offs"
+        - label: "**Performance Metrics** - Review team velocity and quality metrics"
+        - label: "**Production Systems** - Understand production responsibilities"
+        - label: "**On-Call Process** - Review incident response and on-call rotation"
+
+  - type: checkboxes
+    id: week_one_processes
+    attributes:
+      label: Process & Workflow Understanding
+      options:
+        - label: "**Sprint Process** - Understand current agile ceremonies"
+        - label: "**Planning Process** - Learn quarterly and annual planning cycles"
+        - label: "**Code Review** - Understand code review standards and process"
+        - label: "**Release Process** - Learn deployment and release procedures"
+        - label: "**Security Process** - Understand security requirements and procedures"
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 🔧 Week 2 Tasks
+        *Complete during second week*
+
+  - type: checkboxes
+    id: week_two_stakeholders
+    attributes:
+      label: Stakeholder Relationships
+      options:
+        - label: "**Product Management** - Meet with product stakeholders"
+        - label: "**Dependent Teams** - Understand team dependencies"
+        - label: "**Customer Teams** - Meet with customer-facing teams"
+        - label: "**Platform Teams** - Connect with infrastructure and platform teams"
+        - label: "**Leadership Peers** - Build relationships with peer managers"
+
+  - type: checkboxes
+    id: week_two_planning
+    attributes:
+      label: Planning & Strategy
+      options:
+        - label: "**Team Goals** - Understand quarterly and annual team objectives"
+        - label: "**Career Development** - Review career plans for all reports"
+        - label: "**Resource Planning** - Understand hiring plans and budget"
+        - label: "**Skills Matrix** - Complete team skills assessment"
+        - label: "**Capacity Planning** - Understand current and future capacity needs"
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 🚀 Month 1 Tasks
+        *Complete by end of first month*
+
+  - type: checkboxes
+    id: month_one_management
+    attributes:
+      label: Management Execution
+      options:
+        - label: "**Performance Reviews** - Understand performance review process"
+        - label: "**Compensation Planning** - Review compensation and promotion criteria"
+        - label: "**Hiring Process** - Participate in interview process"
+        - label: "**Team Health** - Conduct team health assessment"
+        - label: "**Process Improvements** - Identify and plan initial process improvements"
+
+  - type: checkboxes
+    id: month_one_delivery
+    attributes:
+      label: Delivery & Execution
+      options:
+        - label: "**Sprint Leadership** - Successfully lead sprint ceremonies"
+        - label: "**Quarterly Planning** - Participate in quarterly planning process"
+        - label: "**Technical Decisions** - Support major technical decision making"
+        - label: "**Cross-team Coordination** - Coordinate effectively with other teams"
+        - label: "**Incident Management** - Handle production incidents and follow-up"
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 📊 90 Day Milestone Tasks
+
+  - type: checkboxes
+    id: ninety_day_milestone
+    attributes:
+      label: Full Management Capability
+      options:
+        - label: "**Team Strategy** - Develop team strategy for next quarter"
+        - label: "**Performance Management** - Conduct performance reviews"
+        - label: "**Talent Development** - Create development plans for all reports"
+        - label: "**Technical Roadmap** - Contribute to technical roadmap planning"
+        - label: "**Budget Management** - Own team budget and resource allocation"
+        - label: "**Organizational Impact** - Demonstrate positive impact on team metrics"
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 🎓 Manager-Specific Learning Path
+
+  - type: checkboxes
+    id: manager_learning
+    attributes:
+      label: Manager Training & Development
+      options:
+        - label: "**Red Hat Management Training** - Complete required manager training"
+        - label: "**Performance Management** - Complete performance review training"
+        - label: "**Hiring & Interviewing** - Complete interviewer training"
+        - label: "**Diversity & Inclusion** - Complete D&I training for managers"
+        - label: "**Security for Managers** - Complete security training for managers"
+        - label: "**Budget Management** - Complete finance training"
+
+  - type: checkboxes
+    id: hyperfleet_specific
+    attributes:
+      label: HyperFleet-Specific Manager Knowledge
+      options:
+        - label: "**Customer Impact** - Understand customer SLAs and impact"
+        - label: "**Multi-Cloud Strategy** - Understand strategic cloud relationships"
+        - label: "**Compliance Requirements** - Understand compliance obligations"
+        - label: "**Partner Relationships** - Understand key partner relationships"
+        - label: "**Competitive Landscape** - Understand competitive positioning"
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 👥 IC Onboarding Management
+
+  - type: checkboxes
+    id: ic_onboarding_setup
+    attributes:
+      label: Preparing for New IC Onboarding
+      options:
+        - label: "**Buddy Network** - Establish onboarding buddy assignments"
+        - label: "**Onboarding Process** - Master the IC onboarding process"
+        - label: "**Access Provisioning** - Learn access request and approval process"
+        - label: "**New Hire Communication** - Understand welcome and communication process"
+        - label: "**30-60-90 Reviews** - Learn milestone review process"
+
+  - type: textarea
+    id: team_notes
+    attributes:
+      label: Team Observations & Notes
+      description: Key observations about team dynamics, strengths, challenges
+      placeholder: |
+        - Team Strengths:
+        - Current Challenges:
+        - Individual Development Needs:
+        - Process Improvement Opportunities:
+    validations:
+      required: false
+
+  - type: textarea
+    id: immediate_priorities
+    attributes:
+      label: Immediate Priorities (First 90 Days)
+      description: What are your top 3-5 priorities for the first 90 days?
+      placeholder: |
+        1. Priority 1
+        2. Priority 2
+        3. Priority 3
+    validations:
+      required: false
+
+  - type: textarea
+    id: manager_feedback
+    attributes:
+      label: Manager Onboarding Feedback
+      description: How can we improve the manager onboarding process?
+      placeholder: |
+        What worked well:
+        What was missing:
+        What could be improved:
+        Suggestions for future managers:
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ## 📞 Manager Support Resources
+
+        **Daily Management Questions:** Your mentor manager
+        **HR/Process Questions:** HR Business Partner
+        **Technical Questions:** Technical leads and architects
+        **Leadership Questions:** Your reporting manager
+        **Peer Support:** #hyperfleet-managers Slack channel
+
+        **Escalation:** Tag @hyperfleet-leadership for urgent issues
+
+        ## 📅 Regular Check-ins
+
+        - **Week 1:** Daily check-ins with mentor manager
+        - **Week 2-4:** Bi-weekly check-ins with reporting manager
+        - **Month 2-3:** Weekly 1:1s with reporting manager
+        - **Ongoing:** Monthly manager feedback sessions

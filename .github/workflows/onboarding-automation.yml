@@ -1,0 +1,342 @@
+name: HyperFleet Onboarding Automation
+
+on:
+  issues:
+    types: [opened, edited]
+  schedule:
+    # Run daily at 9 AM UTC to send reminders
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+    inputs:
+      new_hire_name:
+        description: 'New hire full name'
+        required: true
+      new_hire_email:
+        description: 'New hire email address'
+        required: true
+      start_date:
+        description: 'Start date (YYYY-MM-DD)'
+        required: true
+      role:
+        description: 'Role (SWE/QE/SRE/Manager)'
+        required: true
+      manager:
+        description: 'Manager GitHub username'
+        required: true
+
+env:
+  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_ONBOARDING }}
+
+jobs:
+  create-onboarding-issue:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create IC onboarding issue
+        if: inputs.role != 'Manager'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+
+            // Read the IC onboarding template
+            let template = fs.readFileSync('.github/ISSUE_TEMPLATE/new-ic-onboarding.yml', 'utf8');
+
+            // Replace placeholders
+            template = template.replace(/\[NAME\]/g, '${{ inputs.new_hire_name }}');
+            template = template.replace(/\[DATE\]/g, '${{ inputs.start_date }}');
+            template = template.replace(/\[FULL NAME\]/g, '${{ inputs.new_hire_name }}');
+            template = template.replace(/\[START DATE\]/g, '${{ inputs.start_date }}');
+            template = template.replace(/\[SOFTWARE ENGINEER \/ QE \/ SRE\]/g, '${{ inputs.role }}');
+            template = template.replace(/\[MANAGER NAME\]/g, '${{ inputs.manager }}');
+
+            // Create issue
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[ONBOARDING] New IC: ${{ inputs.new_hire_name }} - Start Date: ${{ inputs.start_date }}`,
+              body: `# Welcome to HyperFleet! 🎉
+
+            This issue tracks the onboarding progress for our new team member.
+
+            **New Hire:** ${{ inputs.new_hire_name }}
+            **Start Date:** ${{ inputs.start_date }}
+            **Role:** ${{ inputs.role }}
+            **Manager:** @${{ inputs.manager }}
+            **Onboarding Buddy:** _To be assigned_
+
+            ## Pre-Start Checklist (Manager)
+            _Complete 5 business days before start date_
+
+            - [ ] GitHub Access - Send organization invite to openshift-hyperfleet
+            - [ ] Cloud Accounts - Submit AWS/GCP/Azure access requests
+            - [ ] VPN Access - Request VPN credentials if required
+            - [ ] Hardware - Confirm laptop/equipment delivery
+            - [ ] Buddy Assignment - Assign onboarding buddy from same sub-team
+            - [ ] Welcome Email - Send Day 1 agenda and logistics
+            - [ ] Calendar Setup - Add to team meetings and ceremonies
+            - [ ] Slack Channels - Prepare channel invitation list
+
+            ## Day 1 Tasks
+
+            - [ ] Welcome Meeting - 1:1 with manager (30 min)
+            - [ ] Team Introduction - Meet the team in daily standup
+            - [ ] Onboarding Buddy - Schedule regular check-ins
+            - [ ] Slack Channels - Join essential channels
+            - [ ] Documentation Access - Bookmark key resources
+            - [ ] Account Setup - Complete basic account configurations
+            - [ ] Read Getting Started - Review docs/individuals/01-getting-started.md
+
+            _For complete checklist, see: [IC Onboarding Template](templates/github-issues/new-ic-onboarding.yml)_`,
+              labels: ['onboarding', 'individual-contributor', '${{ inputs.role }}'],
+              assignees: ['${{ inputs.manager }}']
+            });
+
+            console.log('Created issue:', issue.data.html_url);
+
+      - name: Create manager onboarding issue
+        if: inputs.role == 'Manager'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[ONBOARDING-MGR] New Manager: ${{ inputs.new_hire_name }} - Start Date: ${{ inputs.start_date }}`,
+              body: `# Welcome to HyperFleet Leadership! 👔
+
+            This issue tracks the onboarding progress for our new engineering manager.
+
+            **New Manager:** ${{ inputs.new_hire_name }}
+            **Start Date:** ${{ inputs.start_date }}
+            **Reporting Manager:** @${{ inputs.manager }}
+
+            _For complete checklist, see: [Manager Onboarding Template](templates/github-issues/new-manager-onboarding.yml)_`,
+              labels: ['onboarding', 'manager'],
+              assignees: ['${{ inputs.manager }}']
+            });
+
+            console.log('Created manager issue:', issue.data.html_url);
+
+      - name: Send Slack notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          text: |
+            🚀 New HyperFleet onboarding started!
+
+            **New Hire:** ${{ inputs.new_hire_name }}
+            **Role:** ${{ inputs.role }}
+            **Start Date:** ${{ inputs.start_date }}
+            **Manager:** @${{ inputs.manager }}
+
+            Onboarding issue created and assigned. Manager checklist activated.
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_ONBOARDING }}
+
+  send-reminders:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for overdue onboarding tasks
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+
+            // Get all open onboarding issues
+            const issues = await github.rest.issues.listForRepo({
+              owner,
+              repo,
+              labels: 'onboarding',
+              state: 'open'
+            });
+
+            const now = new Date();
+            let overdueIssues = [];
+
+            for (const issue of issues.data) {
+              // Extract start date from title
+              const startDateMatch = issue.title.match(/Start Date: (\d{4}-\d{2}-\d{2})/);
+              if (!startDateMatch) continue;
+
+              const startDate = new Date(startDateMatch[1]);
+              const daysSinceStart = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
+
+              // Check for overdue milestones
+              if (daysSinceStart > 0 && daysSinceStart <= 90) {
+                // Check if critical Day 1 tasks are complete
+                if (daysSinceStart >= 1) {
+                  const hasUncheckedDayOneTasks = issue.body.includes('Day 1 Tasks') &&
+                    issue.body.includes('- [ ]');
+
+                  if (hasUncheckedDayOneTasks) {
+                    overdueIssues.push({
+                      issue,
+                      type: 'day-1-overdue',
+                      daysSinceStart
+                    });
+                  }
+                }
+
+                // Check for Week 1 overdue
+                if (daysSinceStart >= 7) {
+                  const hasUncheckedWeekOneTasks = issue.body.includes('Week 1') &&
+                    issue.body.includes('- [ ]');
+
+                  if (hasUncheckedWeekOneTasks) {
+                    overdueIssues.push({
+                      issue,
+                      type: 'week-1-overdue',
+                      daysSinceStart
+                    });
+                  }
+                }
+
+                // Check for 30-day milestone
+                if (daysSinceStart >= 30) {
+                  const hasUnchecked30DayTasks = issue.body.includes('30 Day Milestone') &&
+                    issue.body.includes('- [ ]');
+
+                  if (hasUnchecked30DayTasks) {
+                    overdueIssues.push({
+                      issue,
+                      type: '30-day-overdue',
+                      daysSinceStart
+                    });
+                  }
+                }
+              }
+            }
+
+            // Send Slack reminders for overdue items
+            if (overdueIssues.length > 0) {
+              console.log(`Found ${overdueIssues.length} overdue onboarding issues`);
+
+              for (const overdue of overdueIssues) {
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: overdue.issue.number,
+                  body: `⚠️ **Onboarding Reminder**
+
+                  This onboarding has overdue tasks (${overdue.daysSinceStart} days since start).
+
+                  **Overdue Type:** ${overdue.type}
+                  **Action Required:** Please update task completion status or explain delays.
+
+                  @${overdue.issue.assignees[0]?.login || 'onboarding-process-owner'} - Please review.`
+                });
+              }
+            }
+
+  auto-close-completed:
+    if: github.event_name == 'issues' && (github.event.action == 'edited')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto-close completed onboarding issues
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue = context.payload.issue;
+
+            // Only process onboarding issues
+            if (!issue.labels.some(label => label.name === 'onboarding')) {
+              return;
+            }
+
+            // Check if all major milestones are complete
+            const body = issue.body;
+            const uncheckedTasks = (body.match(/- \[ \]/g) || []).length;
+            const checkedTasks = (body.match(/- \[x\]/g) || []).length;
+
+            // If 90%+ tasks are complete and it's been 90+ days
+            const completionRate = checkedTasks / (checkedTasks + uncheckedTasks);
+            const startDateMatch = issue.title.match(/Start Date: (\d{4}-\d{2}-\d{2})/);
+
+            if (startDateMatch && completionRate >= 0.9) {
+              const startDate = new Date(startDateMatch[1]);
+              const daysSinceStart = Math.floor((Date.now() - startDate) / (1000 * 60 * 60 * 24));
+
+              if (daysSinceStart >= 90) {
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed'
+                });
+
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: `🎉 **Onboarding Complete!**
+
+                  Congratulations on completing the HyperFleet onboarding process!
+
+                  **Stats:**
+                  - Completion Rate: ${Math.round(completionRate * 100)}%
+                  - Days Since Start: ${daysSinceStart}
+
+                  This issue has been automatically closed. Welcome to the team! 🚀
+
+                  Please provide feedback on the onboarding process: [Feedback Form](link-to-feedback)`
+                });
+              }
+            }
+
+  weekly-metrics:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate onboarding metrics
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+
+            // Get onboarding issues from last 90 days
+            const ninetyDaysAgo = new Date();
+            ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+
+            const issues = await github.rest.issues.listForRepo({
+              owner,
+              repo,
+              labels: 'onboarding',
+              since: ninetyDaysAgo.toISOString(),
+              state: 'all'
+            });
+
+            const metrics = {
+              totalOnboarding: issues.data.length,
+              completed: issues.data.filter(i => i.state === 'closed').length,
+              inProgress: issues.data.filter(i => i.state === 'open').length,
+              averageDaysToComplete: 0
+            };
+
+            // Calculate average completion time
+            const completedIssues = issues.data.filter(i => i.state === 'closed');
+            if (completedIssues.length > 0) {
+              const totalDays = completedIssues.reduce((sum, issue) => {
+                const startMatch = issue.title.match(/Start Date: (\d{4}-\d{2}-\d{2})/);
+                const closeDate = new Date(issue.closed_at);
+                const startDate = new Date(startMatch[1]);
+                return sum + Math.floor((closeDate - startDate) / (1000 * 60 * 60 * 24));
+              }, 0);
+              metrics.averageDaysToComplete = Math.round(totalDays / completedIssues.length);
+            }
+
+            console.log('Onboarding Metrics:', JSON.stringify(metrics, null, 2));
+
+            // Send weekly summary to Slack (if it's Monday)
+            const isMonday = new Date().getDay() === 1;
+            if (isMonday && process.env.SLACK_WEBHOOK) {
+              console.log('Would send weekly metrics to Slack');
+            }

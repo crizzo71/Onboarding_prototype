@@ -1,0 +1,83 @@
+# HyperFleet Onboarding - Git Ignore File
+
+# Environment and secrets (SECURITY REQUIREMENT)
+.env
+.env.local
+.env.production
+*.env
+*secrets*
+*credentials*
+*password*
+
+# Development environment
+.hyperfleet-dev.env
+kubeconfig*
+*.kubeconfig
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Test results
+test-results/
+coverage/
+.nyc_output/
+
+# Node modules (if any JavaScript tools added)
+node_modules/
+
+# Python cache (if any Python tools added)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local development artifacts
+kind-config.yaml
+.kube/
+.docker/
+
+# Security scan results
+security-audit.log
+vulnerability-report.*
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Local customizations
+local/
+custom/
+*.local
+
+# Documentation builds
+_site/
+.jekyll-cache/
+
+# Claude specific
+.claude/
